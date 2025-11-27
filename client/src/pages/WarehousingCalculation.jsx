@@ -183,12 +183,12 @@ const WarehousingCalculation = () => {
       if (warehousing.lagerplatz_verbringen) section1Items.push({ description: 'Lagerplatz verbringen', value: fmt(warehousing.lagerplatz_verbringen) });
       if (warehousing.kommissionierung_b2b) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(warehousing.kommissionierung_b2b) });
       if (warehousing.kommissionierung_b2c) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(warehousing.kommissionierung_b2c) });
-      if (warehousing.zusatzarbeiten_stunden) section1Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(warehousing.zusatzarbeiten_stunden) });
       if (warehousing.handling_out) section1Items.push({ description: 'Handling out', value: fmt(warehousing.handling_out) });
       if (warehousing.anmeldung_avisierung) section1Items.push({ description: 'Anmeldung / Avisierung', value: fmt(warehousing.anmeldung_avisierung) });
 
       // Bereich 2: Retouren & Lager & Sonderarbeiten
       const section2Items = [];
+      if (warehousing.zusatzarbeiten_stunden) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(warehousing.zusatzarbeiten_stunden) });
       if (warehousing.annahme_entsorgung) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(warehousing.annahme_entsorgung) });
       if (warehousing.grobsichtung) section2Items.push({ description: 'Grobsichtung', value: fmt(warehousing.grobsichtung) });
       if (warehousing.einhuellen_polybag) section2Items.push({ description: 'Einhüllen Polybag', value: fmt(warehousing.einhuellen_polybag) });

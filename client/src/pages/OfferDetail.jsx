@@ -144,12 +144,12 @@ Fashion Holding Düsseldorf GmbH`;
         if (fmt(data.lagerplatz_verbringen)) section1Items.push({ description: 'Lagerplatz verbringen', value: fmt(data.lagerplatz_verbringen, ' €') });
         if (fmt(data.kommissionierung_b2b)) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(data.kommissionierung_b2b, ' €') });
         if (fmt(data.kommissionierung_b2c)) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(data.kommissionierung_b2c, ' €') });
-        if (fmt(data.zusatzarbeiten_stunden)) section1Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.handling_out)) section1Items.push({ description: 'Handling out', value: fmt(data.handling_out, ' €') });
         if (fmt(data.anmeldung_avisierung)) section1Items.push({ description: 'Anmeldung / Avisierung', value: fmt(data.anmeldung_avisierung, ' €') });
 
         // Bereich 2: Retouren & Lager & Sonderarbeiten
         const section2Items = [];
+        if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(data.annahme_entsorgung, ' €') });
         if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
         if (fmt(data.einhuellen_polybag)) section2Items.push({ description: 'Einhüllen Polybag', value: fmt(data.einhuellen_polybag, ' €') });
@@ -286,12 +286,12 @@ Fashion Holding Düsseldorf GmbH`;
         if (fmt(data.lagerplatz_verbringen)) section1Items.push({ description: 'Lagerplatz verbringen', value: fmt(data.lagerplatz_verbringen, ' €') });
         if (fmt(data.kommissionierung_b2b)) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(data.kommissionierung_b2b, ' €') });
         if (fmt(data.kommissionierung_b2c)) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(data.kommissionierung_b2c, ' €') });
-        if (fmt(data.zusatzarbeiten_stunden)) section1Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.handling_out)) section1Items.push({ description: 'Handling out', value: fmt(data.handling_out, ' €') });
         if (fmt(data.anmeldung_avisierung)) section1Items.push({ description: 'Anmeldung / Avisierung', value: fmt(data.anmeldung_avisierung, ' €') });
 
         // Bereich 2: Retouren & Lager & Sonderarbeiten
         const section2Items = [];
+        if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(data.annahme_entsorgung, ' €') });
         if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
         if (fmt(data.einhuellen_polybag)) section2Items.push({ description: 'Einhüllen Polybag', value: fmt(data.einhuellen_polybag, ' €') });
