@@ -27,7 +27,7 @@ const GarmentCalculation = () => {
   const [items, setItems] = useState([{
     item_number: 1,
     fob_preis_usd: '',
-    kurs: '1.0000',
+    kurs: '1,0000',
     fob_preis_eur: '',
     fracht: '',
     zoll_prozent: '12',
@@ -72,23 +72,30 @@ const GarmentCalculation = () => {
       }
 
       if (data.items && data.items.length > 0) {
+        // Helper to format numeric values with 2 decimal places (4 for kurs)
+        const formatNum = (val, decimals = 2) => {
+          if (val == null || val === '') return '';
+          const num = parseFloat(val);
+          return !isNaN(num) ? num.toFixed(decimals).replace('.', ',') : '';
+        };
+
         const loadedItems = data.items.map((item, index) => ({
           item_number: item.item_number || index + 1,
-          fob_preis_usd: item.fob_preis_usd?.toString() || '',
-          kurs: item.kurs?.toString() || '1.0000',
-          fob_preis_eur: item.fob_preis_eur?.toString() || '',
-          fracht: item.fracht?.toString() || '',
-          zoll_prozent: item.zoll_prozent?.toString() || '12',
-          zoll: item.zoll?.toString() || '',
-          aufbereitung: item.aufbereitung?.toString() || '',
-          selbstkosten: item.selbstkosten?.toString() || '',
-          fhd_aufschlag_prozent: item.fhd_aufschlag_prozent?.toString() || '',
-          fhd_aufschlag_wert: item.fhd_aufschlag_wert?.toString() || '',
-          vk_roh: item.vk_roh?.toString() || '',
-          vk_gesetzt: item.vk_gesetzt != null ? parseFloat(item.vk_gesetzt).toFixed(2).replace('.', ',') : '',
-          provision_agent_prozent: item.provision_agent_prozent?.toString() || '',
-          provision_agent_wert: item.provision_agent_wert?.toString() || '',
-          marge_real: item.marge_real?.toString() || '',
+          fob_preis_usd: formatNum(item.fob_preis_usd),
+          kurs: formatNum(item.kurs, 4) || '1,0000',
+          fob_preis_eur: formatNum(item.fob_preis_eur),
+          fracht: formatNum(item.fracht),
+          zoll_prozent: formatNum(item.zoll_prozent),
+          zoll: formatNum(item.zoll),
+          aufbereitung: formatNum(item.aufbereitung),
+          selbstkosten: formatNum(item.selbstkosten),
+          fhd_aufschlag_prozent: formatNum(item.fhd_aufschlag_prozent),
+          fhd_aufschlag_wert: formatNum(item.fhd_aufschlag_wert),
+          vk_roh: formatNum(item.vk_roh),
+          vk_gesetzt: formatNum(item.vk_gesetzt),
+          provision_agent_prozent: formatNum(item.provision_agent_prozent),
+          provision_agent_wert: formatNum(item.provision_agent_wert),
+          marge_real: formatNum(item.marge_real),
           style: item.style || '',
           composition: item.composition || '',
           material: item.material || '',
@@ -97,7 +104,7 @@ const GarmentCalculation = () => {
           lieferzeit: item.lieferzeit || '',
           produktionszeitraum: item.produktionszeitraum || '',
           frachtzeitraum: item.frachtzeitraum || '',
-          luftfrachtzuschlag: item.luftfrachtzuschlag?.toString() || '',
+          luftfrachtzuschlag: formatNum(item.luftfrachtzuschlag),
           gg: item.gg || '',
           bemerkungen: item.bemerkungen || ''
         }));
@@ -307,7 +314,7 @@ const GarmentCalculation = () => {
       setItems([...items, {
         item_number: items.length + 1,
         fob_preis_usd: '',
-        kurs: '1.0000',
+        kurs: '1,0000',
         fob_preis_eur: '',
         fracht: '',
         zoll_prozent: '12',
@@ -420,7 +427,7 @@ const GarmentCalculation = () => {
     setItems([{
       item_number: 1,
       fob_preis_usd: '',
-      kurs: '1.0000',
+      kurs: '1,0000',
       fob_preis_eur: '',
       fracht: '',
       zoll_prozent: '12',

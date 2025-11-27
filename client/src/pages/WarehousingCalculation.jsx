@@ -60,12 +60,31 @@ const WarehousingCalculation = () => {
       }
 
       if (data.warehousing) {
+        // Fields that should be formatted as numbers with 2 decimal places
+        const numericFields = [
+          'handling_in_entladung', 'lagerplatz_verbringen', 'kommissionierung_b2b',
+          'kommissionierung_b2c', 'zusatzarbeiten_stunden', 'handling_out',
+          'anmeldung_avisierung', 'lieferscheintasche', 'kartonage1_wert',
+          'kartonage2_wert', 'kartonage3_wert', 'annahme_entsorgung', 'grobsichtung',
+          'einhuellen_polybag', 'rueckfuehrung_bestand', 'preis_m2',
+          'inventur_stunden', 'etiketten_drucken_stunden', 'etikettierung_stunden'
+        ];
+
+        const formatValue = (key, value) => {
+          if (value == null || value === '') return '';
+          if (numericFields.includes(key)) {
+            const num = parseFloat(value);
+            return !isNaN(num) ? num.toFixed(2).replace('.', ',') : value.toString();
+          }
+          return value.toString();
+        };
+
         setWarehousing({
           ...warehousing,
           ...Object.fromEntries(
             Object.entries(data.warehousing).map(([key, value]) => [
               key,
-              value?.toString() || ''
+              formatValue(key, value)
             ])
           )
         });
