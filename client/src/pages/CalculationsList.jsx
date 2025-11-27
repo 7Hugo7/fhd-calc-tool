@@ -12,6 +12,8 @@ const CalculationsList = () => {
   const [loading, setLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [expandedGroups, setExpandedGroups] = useState(new Set());
+  const [editingUuid, setEditingUuid] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
 
   useEffect(() => {
     loadCalculations();
@@ -97,6 +99,39 @@ const CalculationsList = () => {
 
   const handleDeleteCancel = () => {
     setDeleteConfirm(null);
+  };
+
+  const handleEditStart = (uuid, currentTitle) => {
+    setEditingUuid(uuid);
+    setEditTitle(currentTitle || '');
+  };
+
+  const handleEditCancel = () => {
+    setEditingUuid(null);
+    setEditTitle('');
+  };
+
+  const handleEditSave = async () => {
+    if (!editingUuid || !editTitle.trim()) return;
+
+    try {
+      await api.patch(`/calculations/${editingUuid}/title`, { title: editTitle.trim() });
+      showSuccess('Titel erfolgreich aktualisiert');
+      setEditingUuid(null);
+      setEditTitle('');
+      loadCalculations();
+    } catch (error) {
+      console.error('Edit title error:', error);
+      showError('Fehler beim Aktualisieren des Titels');
+    }
+  };
+
+  const handleEditKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleEditSave();
+    } else if (e.key === 'Escape') {
+      handleEditCancel();
+    }
   };
 
   const formatDate = (dateString) => {
@@ -189,7 +224,48 @@ const CalculationsList = () => {
                             {isExpanded ? '▼' : '▶'}
                           </button>
                         </td>
-                        <td className="p-4">{group.title || 'Unbenannt'}</td>
+                        <td className="p-4">
+                          {editingUuid === group.calculation_uuid ? (
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                value={editTitle}
+                                onChange={(e) => setEditTitle(e.target.value)}
+                                onKeyDown={handleEditKeyDown}
+                                className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                autoFocus
+                              />
+                              <button
+                                onClick={handleEditSave}
+                                className="px-2 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600"
+                                title="Speichern"
+                              >
+                                ✓
+                              </button>
+                              <button
+                                onClick={handleEditCancel}
+                                className="px-2 py-1 bg-gray-400 text-white rounded text-xs hover:bg-gray-500"
+                                title="Abbrechen"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <span>{group.title || 'Unbenannt'}</span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditStart(group.calculation_uuid, group.title);
+                                }}
+                                className="text-gray-400 hover:text-primary-600 text-sm"
+                                title="Titel bearbeiten"
+                              >
+                                ✎
+                              </button>
+                            </div>
+                          )}
+                        </td>
                         <td className="p-4">
                           <span className={`px-2 py-1 rounded text-xs font-semibold ${
                             isWarehousing
