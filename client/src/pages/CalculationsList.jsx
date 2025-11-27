@@ -54,6 +54,11 @@ const CalculationsList = () => {
 
     groups.forEach(group => {
       group.versions.sort((a, b) => (b.version || 0) - (a.version || 0));
+      // Update title to use the current/latest version's title
+      const currentVersion = group.versions.find(v => v.is_current) || group.versions[0];
+      if (currentVersion) {
+        group.title = currentVersion.title;
+      }
     });
 
     return Array.from(groups.values());

@@ -14,7 +14,10 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(tasklist:*)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(sqlite3:*)",
+      "Bash(node -e:*)",
+      "Bash(node check-db.js:*)"
     ],
     "deny": [],
     "ask": []
