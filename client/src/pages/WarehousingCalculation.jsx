@@ -207,7 +207,7 @@ const WarehousingCalculation = () => {
 
       // Bereich 2: Retourenhandling
       const section2Items = [];
-      if (warehousing.zusatzarbeiten_stunden) section2Items.push({ description: 'Zusatzarbeiten (Inventur - Etikettierung - tec.) Stundenbasis', value: fmt(warehousing.zusatzarbeiten_stunden) });
+      if (warehousing.zusatzarbeiten_stunden) section2Items.push({ description: 'Zusatzarbeiten (Inventur - Etikettierung - etc.) Stundenbasis', value: fmt(warehousing.zusatzarbeiten_stunden) });
       if (warehousing.annahme_entsorgung) section2Items.push({ description: 'Annahme / Entsorgung Material', value: fmt(warehousing.annahme_entsorgung) });
       if (warehousing.grobsichtung) section2Items.push({ description: 'Grobsichtung', value: fmt(warehousing.grobsichtung) });
       if (warehousing.einhuellen_polybag) section2Items.push({ description: 'Neuverpackung in Single polybag', value: fmt(warehousing.einhuellen_polybag) });
@@ -363,7 +363,7 @@ const WarehousingCalculation = () => {
               />
             </div>
             <div>
-              <label className="block mb-1 text-gray-700 font-semibold text-sm">Zusatzarbeiten (Inventur - Etikettierung - tec.) Stundenbasis</label>
+              <label className="block mb-1 text-gray-700 font-semibold text-sm">Zusatzarbeiten (Inventur - Etikettierung - etc.) Stundenbasis</label>
               <input
                 type="text"
                 value={warehousing.zusatzarbeiten_stunden}
