@@ -149,7 +149,7 @@ Fashion Holding Düsseldorf GmbH`;
         // Bereich 2: Retouren & Lager & Sonderarbeiten
         const section2Items = [];
         if (fmt(data.anmeldung_avisierung)) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(data.anmeldung_avisierung, ' €') });
-        if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
+        if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Inventur - Etikettierung - tec.) Stundenbasis', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung Material', value: fmt(data.annahme_entsorgung, ' €') });
         if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
         if (fmt(data.einhuellen_polybag)) section2Items.push({ description: 'Neuverpackung in Single polybag', value: fmt(data.einhuellen_polybag, ' €') });
@@ -291,7 +291,7 @@ Fashion Holding Düsseldorf GmbH`;
         // Bereich 2: Retouren & Lager & Sonderarbeiten
         const section2Items = [];
         if (fmt(data.anmeldung_avisierung)) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(data.anmeldung_avisierung, ' €') });
-        if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
+        if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Inventur - Etikettierung - tec.) Stundenbasis', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung Material', value: fmt(data.annahme_entsorgung, ' €') });
         if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
         if (fmt(data.einhuellen_polybag)) section2Items.push({ description: 'Neuverpackung in Single polybag', value: fmt(data.einhuellen_polybag, ' €') });
