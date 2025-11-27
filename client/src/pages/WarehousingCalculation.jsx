@@ -206,7 +206,7 @@ const WarehousingCalculation = () => {
 
       // Bereich 2: Retouren & Lager & Sonderarbeiten
       const section2Items = [];
-      if (warehousing.anmeldung_avisierung) section2Items.push({ description: 'Anmeldung / Avisierung', value: fmt(warehousing.anmeldung_avisierung) });
+      if (warehousing.anmeldung_avisierung) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(warehousing.anmeldung_avisierung) });
       if (warehousing.zusatzarbeiten_stunden) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(warehousing.zusatzarbeiten_stunden) });
       if (warehousing.annahme_entsorgung) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(warehousing.annahme_entsorgung) });
       if (warehousing.grobsichtung) section2Items.push({ description: 'Grobsichtung', value: fmt(warehousing.grobsichtung) });
@@ -394,7 +394,7 @@ const WarehousingCalculation = () => {
               />
             </div>
             <div>
-              <label className="block mb-1 text-gray-700 font-semibold text-sm">Anmeldung / Avisierung</label>
+              <label className="block mb-1 text-gray-700 font-semibold text-sm">Avisierung Großkunde</label>
               <input
                 type="text"
                 value={warehousing.anmeldung_avisierung}

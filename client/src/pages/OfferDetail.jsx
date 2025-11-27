@@ -148,7 +148,7 @@ Fashion Holding Düsseldorf GmbH`;
 
         // Bereich 2: Retouren & Lager & Sonderarbeiten
         const section2Items = [];
-        if (fmt(data.anmeldung_avisierung)) section2Items.push({ description: 'Anmeldung / Avisierung', value: fmt(data.anmeldung_avisierung, ' €') });
+        if (fmt(data.anmeldung_avisierung)) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(data.anmeldung_avisierung, ' €') });
         if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(data.annahme_entsorgung, ' €') });
         if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
@@ -290,7 +290,7 @@ Fashion Holding Düsseldorf GmbH`;
 
         // Bereich 2: Retouren & Lager & Sonderarbeiten
         const section2Items = [];
-        if (fmt(data.anmeldung_avisierung)) section2Items.push({ description: 'Anmeldung / Avisierung', value: fmt(data.anmeldung_avisierung, ' €') });
+        if (fmt(data.anmeldung_avisierung)) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(data.anmeldung_avisierung, ' €') });
         if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(data.annahme_entsorgung, ' €') });
         if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
