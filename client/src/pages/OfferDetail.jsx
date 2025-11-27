@@ -186,7 +186,7 @@ Fashion Holding Düsseldorf GmbH`;
 
       pdf.addSimpleFooter('Fashion Holding Düsseldorf GmbH | www.fhd.agency');
 
-      pdf.save(`Angebot_${offer.offer_number || offer.id}_${today.replace(/\./g, '-')}.pdf`);
+      pdf.save('FHD Angebot.pdf');
       showSuccess('PDF erfolgreich heruntergeladen!');
     } catch (error) {
       console.error('PDF generation failed:', error);
