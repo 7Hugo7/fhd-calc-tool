@@ -208,10 +208,10 @@ const WarehousingCalculation = () => {
       const section2Items = [];
       if (warehousing.anmeldung_avisierung) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(warehousing.anmeldung_avisierung) });
       if (warehousing.zusatzarbeiten_stunden) section2Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(warehousing.zusatzarbeiten_stunden) });
-      if (warehousing.annahme_entsorgung) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(warehousing.annahme_entsorgung) });
+      if (warehousing.annahme_entsorgung) section2Items.push({ description: 'Annahme / Entsorgung Material', value: fmt(warehousing.annahme_entsorgung) });
       if (warehousing.grobsichtung) section2Items.push({ description: 'Grobsichtung', value: fmt(warehousing.grobsichtung) });
-      if (warehousing.einhuellen_polybag) section2Items.push({ description: 'Einhüllen Polybag', value: fmt(warehousing.einhuellen_polybag) });
-      if (warehousing.rueckfuehrung_bestand) section2Items.push({ description: 'Rückführung Bestand', value: fmt(warehousing.rueckfuehrung_bestand) });
+      if (warehousing.einhuellen_polybag) section2Items.push({ description: 'Neuverpackung in Single polybag', value: fmt(warehousing.einhuellen_polybag) });
+      if (warehousing.rueckfuehrung_bestand) section2Items.push({ description: 'Lagerplatz verbringen', value: fmt(warehousing.rueckfuehrung_bestand) });
       if (warehousing.flaeche_m2) section2Items.push({ description: 'Fläche', value: warehousing.flaeche_m2 + ' m²' });
       if (warehousing.preis_m2) section2Items.push({ description: 'Preis pro m²', value: fmt(warehousing.preis_m2) });
       if (warehousing.inventur_stunden) section2Items.push({ description: 'Inventur (Std.)', value: fmt(warehousing.inventur_stunden) });
@@ -491,7 +491,7 @@ const WarehousingCalculation = () => {
           <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b-2 border-blue-500">Retouren</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block mb-1 text-gray-700 font-semibold text-sm">Annahme / Entsorgung</label>
+              <label className="block mb-1 text-gray-700 font-semibold text-sm">Annahme / Entsorgung Material</label>
               <input
                 type="text"
                 value={warehousing.annahme_entsorgung}
@@ -513,7 +513,7 @@ const WarehousingCalculation = () => {
               />
             </div>
             <div>
-              <label className="block mb-1 text-gray-700 font-semibold text-sm">Einhüllen Polybag</label>
+              <label className="block mb-1 text-gray-700 font-semibold text-sm">Neuverpackung in Single polybag</label>
               <input
                 type="text"
                 value={warehousing.einhuellen_polybag}
@@ -524,7 +524,7 @@ const WarehousingCalculation = () => {
               />
             </div>
             <div>
-              <label className="block mb-1 text-gray-700 font-semibold text-sm">Rückführung Bestand</label>
+              <label className="block mb-1 text-gray-700 font-semibold text-sm">Lagerplatz verbringen</label>
               <input
                 type="text"
                 value={warehousing.rueckfuehrung_bestand}
