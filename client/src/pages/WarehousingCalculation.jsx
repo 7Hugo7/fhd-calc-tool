@@ -162,59 +162,72 @@ const WarehousingCalculation = () => {
       const pdf = new PDFGenerator();
 
       await pdf.loadLogo('/fhd_logo.png');
-      pdf.addLogo(40);
+      pdf.addLogo(35);
 
       const today = new Date().toLocaleDateString('de-DE');
-      const kundenName = kunde || 'Kalkulation';
+      const kundenName = kunde || 'Warehousing';
 
-      pdf.addFullHeader({ date: today });
-      pdf.addDocumentTitle('WAREHOUSING-KALKULATION');
+      pdf.addCompactHeader({ date: today });
+      pdf.addDocumentTitle(`Angebot: ${kundenName}`);
 
-      const fmt = (val, suffix = ' EUR') => {
+      const fmt = (val, suffix = ' €') => {
         if (!val && val !== 0) return '-';
         const num = typeof val === 'string' ? parseFloat(val.replace(',', '.')) : val;
         if (isNaN(num)) return String(val);
         return num.toFixed(2).replace('.', ',') + suffix;
       };
 
-      const sectionItems = [];
-      if (warehousing.handling_in_entladung) sectionItems.push({ description: 'Handling in / Entladung (pro Stück)', value: fmt(warehousing.handling_in_entladung) });
-      if (warehousing.lagerplatz_verbringen) sectionItems.push({ description: 'Lagerplatz verbringen (pro Stück)', value: fmt(warehousing.lagerplatz_verbringen) });
-      if (warehousing.kommissionierung_b2b) sectionItems.push({ description: 'Kommissionierung B2B (pro Stück)', value: fmt(warehousing.kommissionierung_b2b) });
-      if (warehousing.kommissionierung_b2c) sectionItems.push({ description: 'Kommissionierung B2C (pro Stück)', value: fmt(warehousing.kommissionierung_b2c) });
-      if (warehousing.zusatzarbeiten_stunden) sectionItems.push({ description: 'Zusatzarbeiten (pro Stunde)', value: fmt(warehousing.zusatzarbeiten_stunden) });
-      if (warehousing.handling_out) sectionItems.push({ description: 'Handling out (pro Stück)', value: fmt(warehousing.handling_out) });
-      if (warehousing.anmeldung_avisierung) sectionItems.push({ description: 'Anmeldung / Avisierung (pro Stück)', value: fmt(warehousing.anmeldung_avisierung) });
-      if (warehousing.lieferscheintasche) sectionItems.push({ description: 'Lieferscheintasche (pro Stück)', value: fmt(warehousing.lieferscheintasche) });
-      if (warehousing.kartonage1_text && warehousing.kartonage1_wert) sectionItems.push({ description: `${warehousing.kartonage1_text} (pro Stück)`, value: fmt(warehousing.kartonage1_wert) });
-      if (warehousing.kartonage2_text && warehousing.kartonage2_wert) sectionItems.push({ description: `${warehousing.kartonage2_text} (pro Stück)`, value: fmt(warehousing.kartonage2_wert) });
-      if (warehousing.kartonage3_text && warehousing.kartonage3_wert) sectionItems.push({ description: `${warehousing.kartonage3_text} (pro Stück)`, value: fmt(warehousing.kartonage3_wert) });
-      if (warehousing.annahme_entsorgung) sectionItems.push({ description: 'Annahme / Entsorgung (pro Stück)', value: fmt(warehousing.annahme_entsorgung) });
-      if (warehousing.grobsichtung) sectionItems.push({ description: 'Grobsichtung (pro Stück)', value: fmt(warehousing.grobsichtung) });
-      if (warehousing.einhuellen_polybag) sectionItems.push({ description: 'Einhüllen Polybag (pro Stück)', value: fmt(warehousing.einhuellen_polybag) });
-      if (warehousing.rueckfuehrung_bestand) sectionItems.push({ description: 'Rückführung Bestand (pro Stück)', value: fmt(warehousing.rueckfuehrung_bestand) });
-      if (warehousing.flaeche_m2) sectionItems.push({ description: 'Fläche (m²)', value: warehousing.flaeche_m2 + ' m²' });
-      if (warehousing.preis_m2) sectionItems.push({ description: 'Preis pro m²', value: fmt(warehousing.preis_m2) });
-      if (warehousing.inventur_stunden) sectionItems.push({ description: 'Inventur (pro Stunde)', value: fmt(warehousing.inventur_stunden) });
-      if (warehousing.etiketten_drucken_stunden) sectionItems.push({ description: 'Etiketten drucken (pro Stunde)', value: fmt(warehousing.etiketten_drucken_stunden) });
-      if (warehousing.etikettierung_stunden) sectionItems.push({ description: 'Etikettierung (pro Stunde)', value: fmt(warehousing.etikettierung_stunden) });
-      if (warehousing.bemerkungen) sectionItems.push({ description: 'Bemerkungen', value: warehousing.bemerkungen });
+      // Bereich 1: Wareneingang & Warenausgang
+      const section1Items = [];
+      if (warehousing.handling_in_entladung) section1Items.push({ description: 'Handling in / Entladung', value: fmt(warehousing.handling_in_entladung) });
+      if (warehousing.lagerplatz_verbringen) section1Items.push({ description: 'Lagerplatz verbringen', value: fmt(warehousing.lagerplatz_verbringen) });
+      if (warehousing.kommissionierung_b2b) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(warehousing.kommissionierung_b2b) });
+      if (warehousing.kommissionierung_b2c) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(warehousing.kommissionierung_b2c) });
+      if (warehousing.zusatzarbeiten_stunden) section1Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(warehousing.zusatzarbeiten_stunden) });
+      if (warehousing.handling_out) section1Items.push({ description: 'Handling out', value: fmt(warehousing.handling_out) });
+      if (warehousing.anmeldung_avisierung) section1Items.push({ description: 'Anmeldung / Avisierung', value: fmt(warehousing.anmeldung_avisierung) });
 
-      if (sectionItems.length > 0) {
-        pdf.addSection({
-          title: `Warehousing: ${kundenName}`,
-          items: sectionItems
-        });
+      // Bereich 2: Retouren & Lager & Sonderarbeiten
+      const section2Items = [];
+      if (warehousing.annahme_entsorgung) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(warehousing.annahme_entsorgung) });
+      if (warehousing.grobsichtung) section2Items.push({ description: 'Grobsichtung', value: fmt(warehousing.grobsichtung) });
+      if (warehousing.einhuellen_polybag) section2Items.push({ description: 'Einhüllen Polybag', value: fmt(warehousing.einhuellen_polybag) });
+      if (warehousing.rueckfuehrung_bestand) section2Items.push({ description: 'Rückführung Bestand', value: fmt(warehousing.rueckfuehrung_bestand) });
+      if (warehousing.flaeche_m2) section2Items.push({ description: 'Fläche', value: warehousing.flaeche_m2 + ' m²' });
+      if (warehousing.preis_m2) section2Items.push({ description: 'Preis pro m²', value: fmt(warehousing.preis_m2) });
+      if (warehousing.inventur_stunden) section2Items.push({ description: 'Inventur (Std.)', value: fmt(warehousing.inventur_stunden) });
+      if (warehousing.etiketten_drucken_stunden) section2Items.push({ description: 'Etiketten drucken (Std.)', value: fmt(warehousing.etiketten_drucken_stunden) });
+      if (warehousing.etikettierung_stunden) section2Items.push({ description: 'Etikettierung (Std.)', value: fmt(warehousing.etikettierung_stunden) });
+
+      // Bereich 3: Material & Verpackung
+      const section3Items = [];
+      if (warehousing.lieferscheintasche) section3Items.push({ description: 'Lieferscheintasche', value: fmt(warehousing.lieferscheintasche) });
+      if (warehousing.kartonage1_text && warehousing.kartonage1_wert) section3Items.push({ description: warehousing.kartonage1_text, value: fmt(warehousing.kartonage1_wert) });
+      if (warehousing.kartonage2_text && warehousing.kartonage2_wert) section3Items.push({ description: warehousing.kartonage2_text, value: fmt(warehousing.kartonage2_wert) });
+      if (warehousing.kartonage3_text && warehousing.kartonage3_wert) section3Items.push({ description: warehousing.kartonage3_text, value: fmt(warehousing.kartonage3_wert) });
+
+      // Add 3-column layout
+      const sections = [
+        { title: 'Warenein- & Ausgang', items: section1Items },
+        { title: 'Retouren & Lager', items: section2Items },
+        { title: 'Material & Verpackung', items: section3Items }
+      ];
+
+      pdf.addThreeColumnSections(sections);
+
+      // Add Bemerkungen if present
+      if (warehousing.bemerkungen && warehousing.bemerkungen.trim()) {
+        pdf.addRemarks('Bemerkungen', warehousing.bemerkungen);
       }
 
       pdf.addLegalNotes([
-        'Alle Preise verstehen sich zuzüglich MwSt.',
-        'Diese Kalkulation dient nur zu Informationszwecken.'
+        'Alle Preise verstehen sich pro Stück und zuzüglich MwSt.',
+        'Dieses Angebot ist 30 Tage gültig.'
       ]);
 
       pdf.addSimpleFooter('Fashion Holding Düsseldorf GmbH | www.fhd.agency');
 
-      pdf.save(`Warehousing_${kundenName}_${new Date().toISOString().slice(0,10)}.pdf`);
+      pdf.save(`Angebot_${kundenName}_${new Date().toISOString().slice(0,10)}.pdf`);
       showSuccess('PDF erfolgreich erstellt!');
     } catch (error) {
       console.error('PDF generation failed:', error);

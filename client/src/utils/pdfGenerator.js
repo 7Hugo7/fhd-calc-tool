@@ -247,6 +247,107 @@ class PDFGenerator {
     }
   }
 
+  // Compact 3-column layout for warehousing
+  addThreeColumnSections(sections) {
+    const columnWidth = (this.pageWidth - this.marginLeft - this.marginRight - 8) / 3;
+    const startY = this.currentY;
+    let maxY = startY;
+
+    sections.forEach((section, colIndex) => {
+      const colX = this.marginLeft + colIndex * (columnWidth + 4);
+      let colY = startY;
+
+      // Section title
+      this.doc.setFontSize(9);
+      this.doc.setFont('helvetica', 'bold');
+      this.doc.setFillColor(66, 139, 202);
+      this.doc.rect(colX, colY - 3, columnWidth, 6, 'F');
+      this.doc.setTextColor(255, 255, 255);
+      this.doc.text(section.title, colX + 2, colY + 1);
+      this.doc.setTextColor(50, 50, 50);
+      colY += 6;
+
+      // Section items
+      this.doc.setFontSize(7);
+      section.items.forEach((item, itemIndex) => {
+        const isAlternate = itemIndex % 2 === 0;
+
+        if (isAlternate) {
+          this.doc.setFillColor(245, 245, 245);
+          this.doc.rect(colX, colY - 2.5, columnWidth, 5, 'F');
+        }
+
+        this.doc.setFont('helvetica', 'normal');
+        const labelWidth = columnWidth * 0.65;
+        const valueWidth = columnWidth * 0.35;
+
+        // Truncate label if too long
+        let label = item.description;
+        const labelLines = this.doc.splitTextToSize(label, labelWidth - 2);
+        this.doc.text(labelLines[0], colX + 1, colY);
+
+        this.doc.setFont('helvetica', 'bold');
+        this.doc.text(item.value, colX + columnWidth - 1, colY, { align: 'right' });
+
+        colY += 5;
+      });
+
+      if (colY > maxY) maxY = colY;
+    });
+
+    this.currentY = maxY + 4;
+  }
+
+  // Add remarks section
+  addRemarks(title, text) {
+    if (!text || text.trim() === '') return;
+
+    this.doc.setFontSize(9);
+    this.doc.setFont('helvetica', 'bold');
+    this.doc.setFillColor(66, 139, 202);
+    const boxWidth = this.pageWidth - this.marginLeft - this.marginRight;
+    this.doc.rect(this.marginLeft, this.currentY - 3, boxWidth, 6, 'F');
+    this.doc.setTextColor(255, 255, 255);
+    this.doc.text(title, this.marginLeft + 2, this.currentY + 1);
+    this.doc.setTextColor(50, 50, 50);
+    this.currentY += 6;
+
+    this.doc.setFontSize(8);
+    this.doc.setFont('helvetica', 'normal');
+    const lines = this.doc.splitTextToSize(text, boxWidth - 4);
+    lines.forEach(line => {
+      this.doc.text(line, this.marginLeft + 2, this.currentY + 2);
+      this.currentY += 4;
+    });
+
+    this.currentY += 4;
+  }
+
+  // Compact header for single page PDFs
+  addCompactHeader(metadata, company = DEFAULT_COMPANY) {
+    const rightX = this.pageWidth - this.marginRight;
+
+    // Company info on left - smaller
+    this.doc.setFontSize(8);
+    this.doc.setFont('helvetica', 'bold');
+    this.doc.text(company.company, this.marginLeft, this.currentY);
+
+    this.doc.setFont('helvetica', 'normal');
+    this.doc.text(`${company.street} | ${company.postalCity}`, this.marginLeft, this.currentY + 3.5);
+    this.doc.text(`${company.phone} | ${company.email}`, this.marginLeft, this.currentY + 7);
+
+    // Metadata on right
+    this.doc.setFontSize(8);
+    if (metadata.date) {
+      this.doc.text(`Datum: ${metadata.date}`, rightX, this.currentY, { align: 'right' });
+    }
+    if (metadata.offerNumber) {
+      this.doc.text(`Nr: ${metadata.offerNumber}`, rightX, this.currentY + 3.5, { align: 'right' });
+    }
+
+    this.currentY += 12;
+  }
+
   addPageBreak() {
     this.doc.addPage();
     this.currentY = 15;
