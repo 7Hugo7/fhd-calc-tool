@@ -272,24 +272,28 @@ class PDFGenerator {
       section.items.forEach((item, itemIndex) => {
         const isAlternate = itemIndex % 2 === 0;
 
-        if (isAlternate) {
-          this.doc.setFillColor(245, 245, 245);
-          this.doc.rect(colX, colY - 2.5, columnWidth, 5, 'F');
-        }
-
         this.doc.setFont('helvetica', 'normal');
         const labelWidth = columnWidth * 0.65;
-        const valueWidth = columnWidth * 0.35;
 
-        // Truncate label if too long
+        // Split label into multiple lines if needed
         let label = item.description;
         const labelLines = this.doc.splitTextToSize(label, labelWidth - 2);
-        this.doc.text(labelLines[0], colX + 1, colY);
+        const rowHeight = Math.max(5, labelLines.length * 3.5);
+
+        if (isAlternate) {
+          this.doc.setFillColor(245, 245, 245);
+          this.doc.rect(colX, colY - 2.5, columnWidth, rowHeight, 'F');
+        }
+
+        // Render all label lines
+        labelLines.forEach((line, lineIndex) => {
+          this.doc.text(line, colX + 1, colY + (lineIndex * 3));
+        });
 
         this.doc.setFont('helvetica', 'bold');
         this.doc.text(item.value, colX + columnWidth - 1, colY, { align: 'right' });
 
-        colY += 5;
+        colY += rowHeight;
       });
 
       if (colY > maxY) maxY = colY;
