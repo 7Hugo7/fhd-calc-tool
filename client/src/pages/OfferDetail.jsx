@@ -156,9 +156,6 @@ Fashion Holding Düsseldorf GmbH`;
         if (fmt(data.rueckfuehrung_bestand)) section2Items.push({ description: 'Lagerplatz verbringen', value: fmt(data.rueckfuehrung_bestand, ' €') });
         if (data.flaeche_m2) section2Items.push({ description: 'Fläche', value: data.flaeche_m2 + ' m²' });
         if (fmt(data.preis_m2)) section2Items.push({ description: 'Preis pro m²', value: fmt(data.preis_m2, ' €') });
-        if (fmt(data.inventur_stunden)) section2Items.push({ description: 'Inventur (Std.)', value: fmt(data.inventur_stunden, ' €') });
-        if (fmt(data.etiketten_drucken_stunden)) section2Items.push({ description: 'Etiketten drucken (Std.)', value: fmt(data.etiketten_drucken_stunden, ' €') });
-        if (fmt(data.etikettierung_stunden)) section2Items.push({ description: 'Etikettierung (Std.)', value: fmt(data.etikettierung_stunden, ' €') });
 
         // Bereich 3: Material & Verpackung
         const section3Items = [];
@@ -298,9 +295,6 @@ Fashion Holding Düsseldorf GmbH`;
         if (fmt(data.rueckfuehrung_bestand)) section2Items.push({ description: 'Lagerplatz verbringen', value: fmt(data.rueckfuehrung_bestand, ' €') });
         if (data.flaeche_m2) section2Items.push({ description: 'Fläche', value: data.flaeche_m2 + ' m²' });
         if (fmt(data.preis_m2)) section2Items.push({ description: 'Preis pro m²', value: fmt(data.preis_m2, ' €') });
-        if (fmt(data.inventur_stunden)) section2Items.push({ description: 'Inventur (Std.)', value: fmt(data.inventur_stunden, ' €') });
-        if (fmt(data.etiketten_drucken_stunden)) section2Items.push({ description: 'Etiketten drucken (Std.)', value: fmt(data.etiketten_drucken_stunden, ' €') });
-        if (fmt(data.etikettierung_stunden)) section2Items.push({ description: 'Etikettierung (Std.)', value: fmt(data.etikettierung_stunden, ' €') });
 
         // Bereich 3: Material & Verpackung
         const section3Items = [];

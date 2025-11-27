@@ -214,9 +214,6 @@ const WarehousingCalculation = () => {
       if (warehousing.rueckfuehrung_bestand) section2Items.push({ description: 'Lagerplatz verbringen', value: fmt(warehousing.rueckfuehrung_bestand) });
       if (warehousing.flaeche_m2) section2Items.push({ description: 'Fläche', value: warehousing.flaeche_m2 + ' m²' });
       if (warehousing.preis_m2) section2Items.push({ description: 'Preis pro m²', value: fmt(warehousing.preis_m2) });
-      if (warehousing.inventur_stunden) section2Items.push({ description: 'Inventur (Std.)', value: fmt(warehousing.inventur_stunden) });
-      if (warehousing.etiketten_drucken_stunden) section2Items.push({ description: 'Etiketten drucken (Std.)', value: fmt(warehousing.etiketten_drucken_stunden) });
-      if (warehousing.etikettierung_stunden) section2Items.push({ description: 'Etikettierung (Std.)', value: fmt(warehousing.etikettierung_stunden) });
 
       // Bereich 3: Material & Verpackung
       const section3Items = [];
@@ -538,7 +535,7 @@ const WarehousingCalculation = () => {
         </div>
 
         <div className="bg-white rounded-xl p-6 mb-6 shadow-md border border-gray-200">
-          <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b-2 border-blue-500">Lager & Sonderarbeiten</h3>
+          <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b-2 border-blue-500">Lagerfläche / Kostensatz</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block mb-1 text-gray-700 font-semibold text-sm">Fläche (m²)</label>
@@ -558,39 +555,6 @@ const WarehousingCalculation = () => {
                 value={warehousing.preis_m2}
                 onChange={(e) => handleInputChange('preis_m2', e.target.value)}
                 onBlur={() => handleNumericBlur('preis_m2')}
-                placeholder="0,00"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-gray-700 font-semibold text-sm">Inventur (Stunden)</label>
-              <input
-                type="text"
-                value={warehousing.inventur_stunden}
-                onChange={(e) => handleInputChange('inventur_stunden', e.target.value)}
-                onBlur={() => handleNumericBlur('inventur_stunden')}
-                placeholder="0,00"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-gray-700 font-semibold text-sm">Etiketten drucken (Stunden)</label>
-              <input
-                type="text"
-                value={warehousing.etiketten_drucken_stunden}
-                onChange={(e) => handleInputChange('etiketten_drucken_stunden', e.target.value)}
-                onBlur={() => handleNumericBlur('etiketten_drucken_stunden')}
-                placeholder="0,00"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-gray-700 font-semibold text-sm">Etikettierung (Stunden)</label>
-              <input
-                type="text"
-                value={warehousing.etikettierung_stunden}
-                onChange={(e) => handleInputChange('etikettierung_stunden', e.target.value)}
-                onBlur={() => handleNumericBlur('etikettierung_stunden')}
                 placeholder="0,00"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
