@@ -45,6 +45,11 @@ function loadDatabase() {
       if (!data.counters) {
         data.counters = { ...defaultData.counters };
       }
+      // Ensure counters_table exists
+      if (!data.counters_table) {
+        data.counters_table = [];
+        saveDatabase();
+      }
     } else {
       data = JSON.parse(JSON.stringify(defaultData));
       saveDatabase();

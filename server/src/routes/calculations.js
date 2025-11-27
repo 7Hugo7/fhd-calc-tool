@@ -105,13 +105,20 @@ router.get('/uuid/:uuid/latest', (req, res) => {
   try {
     const uuid = req.params.uuid;
 
-    const calculation = db.prepare(`
+    let calculation = db.prepare(`
       SELECT * FROM calculations
       WHERE calculation_uuid = ? AND is_current = 1
     `).get(uuid);
 
     if (!calculation) {
       return res.status(404).json({ error: 'Calculation not found' });
+    }
+
+    // Auto-generate offer_number for existing calculations without one
+    if (!calculation.offer_number) {
+      const offerNumber = generateOfferNumber(calculation.version || 1);
+      db.prepare('UPDATE calculations SET offer_number = ? WHERE id = ?').run(offerNumber, calculation.id);
+      calculation.offer_number = offerNumber;
     }
 
     const result = buildCalculationResponse(calculation);
@@ -176,10 +183,17 @@ router.get('/:id', (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
-    const calculation = db.prepare('SELECT * FROM calculations WHERE id = ?').get(id);
+    let calculation = db.prepare('SELECT * FROM calculations WHERE id = ?').get(id);
 
     if (!calculation) {
       return res.status(404).json({ error: 'Calculation not found' });
+    }
+
+    // Auto-generate offer_number for existing calculations without one
+    if (!calculation.offer_number) {
+      const offerNumber = generateOfferNumber(calculation.version || 1);
+      db.prepare('UPDATE calculations SET offer_number = ? WHERE id = ?').run(offerNumber, id);
+      calculation.offer_number = offerNumber;
     }
 
     const result = buildCalculationResponse(calculation);

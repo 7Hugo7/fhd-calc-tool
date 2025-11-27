@@ -426,7 +426,8 @@ const GarmentCalculation = () => {
 
       pdf.addSimpleFooter('Fashion Holding Düsseldorf GmbH | www.fhd.agency');
 
-      pdf.save(`Kalkulation_${kunde || 'Unbenannt'}_${new Date().toISOString().slice(0,10)}.pdf`);
+      const filename = offerNumber ? `FHD Angebot ${offerNumber}.pdf` : 'FHD Angebot.pdf';
+      pdf.save(filename);
       showSuccess('PDF erfolgreich erstellt!');
     } catch (error) {
       console.error('PDF generation failed:', error);
