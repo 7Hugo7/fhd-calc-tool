@@ -17,7 +17,9 @@
       "Bash(npm start)",
       "Bash(sqlite3:*)",
       "Bash(node -e:*)",
-      "Bash(node check-db.js:*)"
+      "Bash(node check-db.js:*)",
+      "Bash(curl:*)",
+      "Bash(npm run:*)"
     ],
     "deny": [],
     "ask": []

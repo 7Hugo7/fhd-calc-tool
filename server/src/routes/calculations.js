@@ -14,22 +14,29 @@ const generateOfferNumber = (version = 1) => {
   const year = new Date().getFullYear();
   const counterKey = `offer_number_${year}`;
 
+  console.log(`Generating offer number for version ${version}, key: ${counterKey}`);
+
   // Get or create the yearly counter from counters_table
   let counter = db.prepare(`SELECT * FROM counters_table WHERE key = ?`).get(counterKey);
+  console.log(`Counter query result:`, counter);
 
   if (!counter) {
     // Initialize counter for this year
+    console.log(`Creating new counter for ${counterKey}`);
     db.prepare(`INSERT INTO counters_table (key, value) VALUES (?, ?)`).run(counterKey, 1);
     counter = { value: 1 };
   } else {
     // Increment counter - we need to get current value first, then update
     const newValue = counter.value + 1;
+    console.log(`Incrementing counter from ${counter.value} to ${newValue}`);
     db.prepare(`UPDATE counters_table SET value = ? WHERE key = ?`).run(newValue, counterKey);
     counter = { value: newValue };
   }
 
   const paddedCounter = String(counter.value).padStart(4, '0');
-  return `FHD${year}-${paddedCounter}.${version}`;
+  const offerNumber = `FHD${year}-${paddedCounter}.${version}`;
+  console.log(`Generated offer number: ${offerNumber}`);
+  return offerNumber;
 };
 
 // Helper to update offer number version only (keep same base number)
@@ -191,12 +198,18 @@ router.get('/:id', (req, res) => {
 
     // Auto-generate offer_number for existing calculations without one
     if (!calculation.offer_number) {
+      console.log(`Calculation ${id} has no offer_number, generating...`);
       const offerNumber = generateOfferNumber(calculation.version || 1);
+      console.log(`Updating calculation ${id} with offer_number: ${offerNumber}`);
       db.prepare('UPDATE calculations SET offer_number = ? WHERE id = ?').run(offerNumber, id);
       calculation.offer_number = offerNumber;
+      console.log(`Calculation ${id} now has offer_number: ${calculation.offer_number}`);
+    } else {
+      console.log(`Calculation ${id} already has offer_number: ${calculation.offer_number}`);
     }
 
     const result = buildCalculationResponse(calculation);
+    console.log(`Returning calculation with offer_number: ${result.offer_number}`);
     res.json(result);
   } catch (error) {
     console.error('GET calculation error:', error);
@@ -565,10 +578,19 @@ router.get('/offers/all', (req, res) => {
 router.get('/offers/:id', (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const offer = db.prepare('SELECT * FROM offers WHERE id = ?').get(id);
+    let offer = db.prepare('SELECT * FROM offers WHERE id = ?').get(id);
 
     if (!offer) {
       return res.status(404).json({ error: 'Offer not found' });
+    }
+
+    // Auto-generate offer_number for existing offers without one
+    if (!offer.offer_number) {
+      console.log(`Offer ${id} has no offer_number, generating...`);
+      const offerNumber = generateOfferNumber(1);
+      console.log(`Updating offer ${id} with offer_number: ${offerNumber}`);
+      db.prepare('UPDATE offers SET offer_number = ? WHERE id = ?').run(offerNumber, id);
+      offer.offer_number = offerNumber;
     }
 
     // Get associated offer data
@@ -593,6 +615,9 @@ router.post('/offers', (req, res) => {
   try {
     const data = req.body;
     const offerUuid = uuidv4();
+    const offerNumber = generateOfferNumber(1);
+
+    console.log(`Creating new offer with offer_number: ${offerNumber}`);
 
     const result = db.prepare(`
       INSERT INTO offers (
@@ -600,8 +625,8 @@ router.post('/offers', (req, res) => {
         customer_company, customer_street, customer_postal_code, customer_city,
         customer_country, customer_email, customer_phone, created_by,
         valid_until, status, notes, message, delivery_option, snapshot_data,
-        created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        offer_number, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
     `).run(
       offerUuid,
       data.offer_type || 'garment',
@@ -621,7 +646,8 @@ router.post('/offers', (req, res) => {
       data.notes || null,
       data.message || null,
       data.delivery_option || null,
-      data.snapshot_data ? JSON.stringify(data.snapshot_data) : null
+      data.snapshot_data ? JSON.stringify(data.snapshot_data) : null,
+      offerNumber
     );
 
     const offerId = result.lastInsertRowid;
