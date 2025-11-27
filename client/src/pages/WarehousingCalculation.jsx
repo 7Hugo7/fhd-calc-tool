@@ -203,10 +203,10 @@ const WarehousingCalculation = () => {
       if (warehousing.kommissionierung_b2b) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(warehousing.kommissionierung_b2b) });
       if (warehousing.kommissionierung_b2c) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(warehousing.kommissionierung_b2c) });
       if (warehousing.handling_out) section1Items.push({ description: 'Handling out', value: fmt(warehousing.handling_out) });
+      if (warehousing.anmeldung_avisierung) section1Items.push({ description: 'Avisierung Großkunde', value: fmt(warehousing.anmeldung_avisierung) });
 
-      // Bereich 2: Retouren & Lager & Sonderarbeiten
+      // Bereich 2: Retourenhandling
       const section2Items = [];
-      if (warehousing.anmeldung_avisierung) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(warehousing.anmeldung_avisierung) });
       if (warehousing.zusatzarbeiten_stunden) section2Items.push({ description: 'Zusatzarbeiten (Inventur - Etikettierung - tec.) Stundenbasis', value: fmt(warehousing.zusatzarbeiten_stunden) });
       if (warehousing.annahme_entsorgung) section2Items.push({ description: 'Annahme / Entsorgung Material', value: fmt(warehousing.annahme_entsorgung) });
       if (warehousing.grobsichtung) section2Items.push({ description: 'Grobsichtung', value: fmt(warehousing.grobsichtung) });
@@ -225,7 +225,7 @@ const WarehousingCalculation = () => {
       // Add 3-column layout
       const sections = [
         { title: 'Warenein- & Ausgang', items: section1Items },
-        { title: 'Retouren & Lager', items: section2Items },
+        { title: 'Retourenhandling', items: section2Items },
         { title: 'Material & Verpackung', items: section3Items }
       ];
 

@@ -145,10 +145,10 @@ Fashion Holding Düsseldorf GmbH`;
         if (fmt(data.kommissionierung_b2b)) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(data.kommissionierung_b2b, ' €') });
         if (fmt(data.kommissionierung_b2c)) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(data.kommissionierung_b2c, ' €') });
         if (fmt(data.handling_out)) section1Items.push({ description: 'Handling out', value: fmt(data.handling_out, ' €') });
+        if (fmt(data.anmeldung_avisierung)) section1Items.push({ description: 'Avisierung Großkunde', value: fmt(data.anmeldung_avisierung, ' €') });
 
-        // Bereich 2: Retouren & Lager & Sonderarbeiten
+        // Bereich 2: Retourenhandling
         const section2Items = [];
-        if (fmt(data.anmeldung_avisierung)) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(data.anmeldung_avisierung, ' €') });
         if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Inventur - Etikettierung - tec.) Stundenbasis', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung Material', value: fmt(data.annahme_entsorgung, ' €') });
         if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
@@ -167,7 +167,7 @@ Fashion Holding Düsseldorf GmbH`;
         // Add 3-column layout
         const sections = [
           { title: 'Warenein- & Ausgang', items: section1Items },
-          { title: 'Retouren & Lager', items: section2Items },
+          { title: 'Retourenhandling', items: section2Items },
           { title: 'Material & Verpackung', items: section3Items }
         ];
 
@@ -284,10 +284,10 @@ Fashion Holding Düsseldorf GmbH`;
         if (fmt(data.kommissionierung_b2b)) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(data.kommissionierung_b2b, ' €') });
         if (fmt(data.kommissionierung_b2c)) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(data.kommissionierung_b2c, ' €') });
         if (fmt(data.handling_out)) section1Items.push({ description: 'Handling out', value: fmt(data.handling_out, ' €') });
+        if (fmt(data.anmeldung_avisierung)) section1Items.push({ description: 'Avisierung Großkunde', value: fmt(data.anmeldung_avisierung, ' €') });
 
-        // Bereich 2: Retouren & Lager & Sonderarbeiten
+        // Bereich 2: Retourenhandling
         const section2Items = [];
-        if (fmt(data.anmeldung_avisierung)) section2Items.push({ description: 'Avisierung Großkunde', value: fmt(data.anmeldung_avisierung, ' €') });
         if (fmt(data.zusatzarbeiten_stunden)) section2Items.push({ description: 'Zusatzarbeiten (Inventur - Etikettierung - tec.) Stundenbasis', value: fmt(data.zusatzarbeiten_stunden, ' €') });
         if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung Material', value: fmt(data.annahme_entsorgung, ' €') });
         if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
@@ -306,7 +306,7 @@ Fashion Holding Düsseldorf GmbH`;
         // Add 3-column layout
         const sections = [
           { title: 'Warenein- & Ausgang', items: section1Items },
-          { title: 'Retouren & Lager', items: section2Items },
+          { title: 'Retourenhandling', items: section2Items },
           { title: 'Material & Verpackung', items: section3Items }
         ];
 
