@@ -11,6 +11,7 @@ const WarehousingCalculation = () => {
   const { id } = useParams();
   const { toasts, removeToast, showSuccess, showError, showWarning } = useToast();
   const [calculationId, setCalculationId] = useState(id ? parseInt(id) : null);
+  const [offerNumber, setOfferNumber] = useState('');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
@@ -57,6 +58,10 @@ const WarehousingCalculation = () => {
 
       if (data.kunde) {
         setKunde(data.kunde);
+      }
+
+      if (data.offer_number) {
+        setOfferNumber(data.offer_number);
       }
 
       if (data.warehousing) {
@@ -117,6 +122,9 @@ const WarehousingCalculation = () => {
 
         if (response.data && response.data.id) {
           setCalculationId(response.data.id);
+          if (response.data.offer_number) {
+            setOfferNumber(response.data.offer_number);
+          }
           showSuccess(`Neue Version ${response.data.version || ''} erstellt!`);
           navigate(`/warehousing/${response.data.id}`);
         }
@@ -129,6 +137,9 @@ const WarehousingCalculation = () => {
 
         if (response.data && response.data.id) {
           setCalculationId(response.data.id);
+          if (response.data.offer_number) {
+            setOfferNumber(response.data.offer_number);
+          }
           showSuccess('Kalkulation erfolgreich gespeichert!');
         }
       }
@@ -186,7 +197,7 @@ const WarehousingCalculation = () => {
       const today = new Date().toLocaleDateString('de-DE');
       const kundenName = kunde || 'Warehousing';
 
-      pdf.addCompactHeader({ date: today });
+      pdf.addCompactHeader({ date: today, offerNumber: offerNumber });
       pdf.addDocumentTitle(`Angebot: ${kundenName}`);
 
       const fmt = (val, suffix = ' €') => {

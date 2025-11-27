@@ -9,6 +9,37 @@ const router = express.Router();
 // Apply authentication to all routes
 router.use(authMiddleware);
 
+// Helper function to generate offer number (FHD{YEAR}-{COUNTER}.{VERSION})
+const generateOfferNumber = (version = 1) => {
+  const year = new Date().getFullYear();
+  const counterKey = `offer_number_${year}`;
+
+  // Get or create the yearly counter from counters_table
+  let counter = db.prepare(`SELECT * FROM counters_table WHERE key = ?`).get(counterKey);
+
+  if (!counter) {
+    // Initialize counter for this year
+    db.prepare(`INSERT INTO counters_table (key, value) VALUES (?, ?)`).run(counterKey, 1);
+    counter = { value: 1 };
+  } else {
+    // Increment counter - we need to get current value first, then update
+    const newValue = counter.value + 1;
+    db.prepare(`UPDATE counters_table SET value = ? WHERE key = ?`).run(newValue, counterKey);
+    counter = { value: newValue };
+  }
+
+  const paddedCounter = String(counter.value).padStart(4, '0');
+  return `FHD${year}-${paddedCounter}.${version}`;
+};
+
+// Helper to update offer number version only (keep same base number)
+const updateOfferNumberVersion = (baseOfferNumber, newVersion) => {
+  if (!baseOfferNumber) return null;
+  // Replace version part: FHD2025-0001.1 -> FHD2025-0001.2
+  const basePart = baseOfferNumber.split('.')[0];
+  return `${basePart}.${newVersion}`;
+};
+
 // Helper function to parse German decimal format (1,23) to float
 const parseGermanFloat = (value) => {
   if (value === null || value === undefined || value === '') return null;
@@ -58,6 +89,7 @@ router.get('/', (req, res) => {
       calculation_type: calc.calculation_type,
       status: calc.status,
       is_current: calc.is_current,
+      offer_number: calc.offer_number,
       created_by: calc.created_by_name
     }));
 
@@ -167,6 +199,7 @@ function buildCalculationResponse(calculation) {
     kunde: calculation.kunde,
     status: calculation.status,
     calculation_type: calculation.calculation_type,
+    offer_number: calculation.offer_number,
     created_at: calculation.created_at,
     modified_at: calculation.modified_at,
     is_current: calculation.is_current,
@@ -248,13 +281,14 @@ router.post('/', (req, res) => {
     const data = req.body;
     const calcType = data.calculation_type || 'garment';
     const calculationUuid = uuidv4();
+    const offerNumber = generateOfferNumber(1);
 
-    console.log(`Creating new ${calcType} calculation:`, data.kunde);
+    console.log(`Creating new ${calcType} calculation:`, data.kunde, `Offer: ${offerNumber}`);
 
     const result = db.prepare(`
-      INSERT INTO calculations (calculation_uuid, version, kunde, created_by, status, calculation_type, created_at, modified_at)
-      VALUES (?, 1, ?, ?, ?, ?, datetime('now'), datetime('now'))
-    `).run(calculationUuid, data.kunde, req.user.id, data.status || 'draft', calcType);
+      INSERT INTO calculations (calculation_uuid, version, kunde, created_by, status, calculation_type, offer_number, created_at, modified_at)
+      VALUES (?, 1, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+    `).run(calculationUuid, data.kunde, req.user.id, data.status || 'draft', calcType, offerNumber);
 
     const calcId = result.lastInsertRowid;
 
@@ -268,7 +302,8 @@ router.post('/', (req, res) => {
     // Log the action
     logAction('CREATE', 'calculation', calcId, calculationUuid, req.user, {
       kunde: data.kunde,
-      calculation_type: calcType
+      calculation_type: calcType,
+      offer_number: offerNumber
     });
 
     console.log(`Created new ${calcType} calculation ID ${calcId}`);
@@ -277,7 +312,8 @@ router.post('/', (req, res) => {
       success: true,
       message: 'Created successfully',
       calculation_uuid: calculationUuid,
-      version: 1
+      version: 1,
+      offer_number: offerNumber
     });
   } catch (error) {
     console.error('POST calculation error:', error);
@@ -303,17 +339,22 @@ router.put('/:id', (req, res) => {
     // Mark old calculation as not current
     db.prepare('UPDATE calculations SET is_current = 0 WHERE id = ?').run(oldId);
 
+    // Update offer number with new version
+    const newVersion = oldCalc.version + 1;
+    const newOfferNumber = updateOfferNumberVersion(oldCalc.offer_number, newVersion);
+
     // Create new version
     const result = db.prepare(`
-      INSERT INTO calculations (calculation_uuid, version, kunde, created_by, status, calculation_type, is_current, parent_version_id, created_at, modified_at)
-      VALUES (?, ?, ?, ?, ?, ?, 1, ?, datetime('now'), datetime('now'))
+      INSERT INTO calculations (calculation_uuid, version, kunde, created_by, status, calculation_type, offer_number, is_current, parent_version_id, created_at, modified_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, datetime('now'), datetime('now'))
     `).run(
       oldCalc.calculation_uuid,
-      oldCalc.version + 1,
+      newVersion,
       data.kunde,
       oldCalc.created_by,
       data.status || 'draft',
       calcType,
+      newOfferNumber,
       oldId
     );
 
@@ -326,13 +367,14 @@ router.put('/:id', (req, res) => {
       insertWarehousingData(newId, data.warehousing);
     }
 
-    console.log(`Created version ${oldCalc.version + 1}, new ID: ${newId}`);
+    console.log(`Created version ${newVersion}, new ID: ${newId}, Offer: ${newOfferNumber}`);
     res.json({
       id: newId,
       success: true,
       message: 'New version created successfully',
       calculation_uuid: oldCalc.calculation_uuid,
-      version: oldCalc.version + 1
+      version: newVersion,
+      offer_number: newOfferNumber
     });
   } catch (error) {
     console.error('PUT calculation error:', error);

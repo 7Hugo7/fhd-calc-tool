@@ -21,6 +21,7 @@ const GarmentCalculation = () => {
   const { toasts, removeToast, showSuccess, showError, showWarning } = useToast();
   const [calculationId, setCalculationId] = useState(id ? parseInt(id) : null);
   const [calculationUuid, setCalculationUuid] = useState(null);
+  const [offerNumber, setOfferNumber] = useState('');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
@@ -69,6 +70,10 @@ const GarmentCalculation = () => {
 
       if (data.calculation_uuid) {
         setCalculationUuid(data.calculation_uuid);
+      }
+
+      if (data.offer_number) {
+        setOfferNumber(data.offer_number);
       }
 
       if (data.items && data.items.length > 0) {
@@ -144,6 +149,9 @@ const GarmentCalculation = () => {
           if (response.data.calculation_uuid) {
             setCalculationUuid(response.data.calculation_uuid);
           }
+          if (response.data.offer_number) {
+            setOfferNumber(response.data.offer_number);
+          }
           showSuccess(`Neue Version ${response.data.version || ''} erstellt!`);
           navigate(`/garment/${response.data.id}`);
         }
@@ -159,6 +167,9 @@ const GarmentCalculation = () => {
           setCalculationId(response.data.id);
           if (response.data.calculation_uuid) {
             setCalculationUuid(response.data.calculation_uuid);
+          }
+          if (response.data.offer_number) {
+            setOfferNumber(response.data.offer_number);
           }
           showSuccess('Kalkulation erfolgreich gespeichert!');
         }
@@ -364,7 +375,7 @@ const GarmentCalculation = () => {
       const today = new Date().toLocaleDateString('de-DE');
       const kunde = items[0]?.style || 'Kalkulation';
 
-      pdf.addFullHeader({ date: today });
+      pdf.addFullHeader({ date: today, offerNumber: offerNumber });
       pdf.addDocumentTitle('PREISKALKULATION');
 
       const fmt = (val, suffix = ' EUR') => {

@@ -18,6 +18,7 @@ const defaultData = {
   garment_offer_data: [],
   warehousing_offer_data: [],
   calculation_logs: [],
+  counters_table: [], // For offer number tracking
   counters: {
     calculations: 0,
     garment_data: 0,
@@ -26,7 +27,8 @@ const defaultData = {
     garment_offer_data: 0,
     warehousing_offer_data: 0,
     calculation_logs: 0,
-    users: 0
+    users: 0,
+    counters_table: 0
   }
 };
 
