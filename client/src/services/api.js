@@ -114,4 +114,18 @@ export const api = {
     }
     return { data };
   },
+
+  patch: async (url, body) => {
+    const response = await fetchWithAuth(url, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      const error = new Error(data.error || 'Request failed');
+      error.response = { data };
+      throw error;
+    }
+    return { data };
+  },
 };
