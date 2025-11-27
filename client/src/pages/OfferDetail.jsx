@@ -89,11 +89,12 @@ const OfferDetail = () => {
         }
       );
 
-      pdf.addDocumentTitle('ANGEBOT');
+      const kundenName = offer.kunde || offer.customer_company || offer.customer_name || 'Angebot';
+      pdf.addDocumentTitle(`Angebot: ${kundenName}`);
 
       const defaultMessage = `Sehr geehrte Damen und Herren,
 
-vielen Dank für Ihr Interesse an unseren Produkten.
+vielen Dank für Ihr Interesse an unseren Dienstleistungen.
 Anbei übersenden wir Ihnen wie besprochen unser Angebot.
 
 Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen gerne zur Verfügung.
@@ -136,36 +137,53 @@ Fashion Holding Düsseldorf GmbH`;
         });
       } else if (offer.offer_type === 'warehousing' && offer.warehousing) {
         const data = offer.warehousing;
-        const sectionItems = [];
 
-        if (fmt(data.handling_in_entladung)) sectionItems.push({ description: 'Handling IN - Entladung (pro Stück)', value: fmt(data.handling_in_entladung) });
-        if (fmt(data.lagerplatz_verbringen)) sectionItems.push({ description: 'Lagerplatz verbringen (pro Stück)', value: fmt(data.lagerplatz_verbringen) });
-        if (fmt(data.kommissionierung_b2b)) sectionItems.push({ description: 'Kommissionierung B2B (pro Stück)', value: fmt(data.kommissionierung_b2b) });
-        if (fmt(data.kommissionierung_b2c)) sectionItems.push({ description: 'Kommissionierung B2C (pro Stück)', value: fmt(data.kommissionierung_b2c) });
-        if (fmt(data.zusatzarbeiten_stunden)) sectionItems.push({ description: 'Zusatzarbeiten (pro Stunde)', value: fmt(data.zusatzarbeiten_stunden) });
-        if (fmt(data.handling_out)) sectionItems.push({ description: 'Handling OUT (pro Stück)', value: fmt(data.handling_out) });
-        if (fmt(data.anmeldung_avisierung)) sectionItems.push({ description: 'Anmeldung/Avisierung', value: fmt(data.anmeldung_avisierung) });
-        if (fmt(data.lieferscheintasche)) sectionItems.push({ description: 'Lieferscheintasche', value: fmt(data.lieferscheintasche) });
-        if (data.kartonage1_text && fmt(data.kartonage1_wert)) sectionItems.push({ description: data.kartonage1_text, value: fmt(data.kartonage1_wert) });
-        if (data.kartonage2_text && fmt(data.kartonage2_wert)) sectionItems.push({ description: data.kartonage2_text, value: fmt(data.kartonage2_wert) });
-        if (data.kartonage3_text && fmt(data.kartonage3_wert)) sectionItems.push({ description: data.kartonage3_text, value: fmt(data.kartonage3_wert) });
-        if (fmt(data.annahme_entsorgung)) sectionItems.push({ description: 'Annahme/Entsorgung', value: fmt(data.annahme_entsorgung) });
-        if (fmt(data.grobsichtung)) sectionItems.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung) });
-        if (fmt(data.einhuellen_polybag)) sectionItems.push({ description: 'Einhüllen Polybag', value: fmt(data.einhuellen_polybag) });
-        if (fmt(data.rueckfuehrung_bestand)) sectionItems.push({ description: 'Rückführung Bestand', value: fmt(data.rueckfuehrung_bestand) });
-        if (fmt(data.flaeche_m2) && fmt(data.preis_m2)) sectionItems.push({ description: `Lagerfläche (${data.flaeche_m2} m²)`, value: fmt(data.preis_m2, ' EUR/m²') });
-        if (fmt(data.inventur_stunden)) sectionItems.push({ description: 'Inventur (pro Stunde)', value: fmt(data.inventur_stunden) });
-        if (fmt(data.etiketten_drucken_stunden)) sectionItems.push({ description: 'Etiketten drucken (pro Stunde)', value: fmt(data.etiketten_drucken_stunden) });
-        if (fmt(data.etikettierung_stunden)) sectionItems.push({ description: 'Etikettierung (pro Stunde)', value: fmt(data.etikettierung_stunden) });
+        // Bereich 1: Wareneingang & Warenausgang
+        const section1Items = [];
+        if (fmt(data.handling_in_entladung)) section1Items.push({ description: 'Handling in / Entladung', value: fmt(data.handling_in_entladung, ' €') });
+        if (fmt(data.lagerplatz_verbringen)) section1Items.push({ description: 'Lagerplatz verbringen', value: fmt(data.lagerplatz_verbringen, ' €') });
+        if (fmt(data.kommissionierung_b2b)) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(data.kommissionierung_b2b, ' €') });
+        if (fmt(data.kommissionierung_b2c)) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(data.kommissionierung_b2c, ' €') });
+        if (fmt(data.zusatzarbeiten_stunden)) section1Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
+        if (fmt(data.handling_out)) section1Items.push({ description: 'Handling out', value: fmt(data.handling_out, ' €') });
+        if (fmt(data.anmeldung_avisierung)) section1Items.push({ description: 'Anmeldung / Avisierung', value: fmt(data.anmeldung_avisierung, ' €') });
 
-        pdf.addSection({
-          title: 'Warehousing-Leistungen',
-          items: sectionItems
-        });
+        // Bereich 2: Retouren & Lager & Sonderarbeiten
+        const section2Items = [];
+        if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(data.annahme_entsorgung, ' €') });
+        if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
+        if (fmt(data.einhuellen_polybag)) section2Items.push({ description: 'Einhüllen Polybag', value: fmt(data.einhuellen_polybag, ' €') });
+        if (fmt(data.rueckfuehrung_bestand)) section2Items.push({ description: 'Rückführung Bestand', value: fmt(data.rueckfuehrung_bestand, ' €') });
+        if (data.flaeche_m2) section2Items.push({ description: 'Fläche', value: data.flaeche_m2 + ' m²' });
+        if (fmt(data.preis_m2)) section2Items.push({ description: 'Preis pro m²', value: fmt(data.preis_m2, ' €') });
+        if (fmt(data.inventur_stunden)) section2Items.push({ description: 'Inventur (Std.)', value: fmt(data.inventur_stunden, ' €') });
+        if (fmt(data.etiketten_drucken_stunden)) section2Items.push({ description: 'Etiketten drucken (Std.)', value: fmt(data.etiketten_drucken_stunden, ' €') });
+        if (fmt(data.etikettierung_stunden)) section2Items.push({ description: 'Etikettierung (Std.)', value: fmt(data.etikettierung_stunden, ' €') });
+
+        // Bereich 3: Material & Verpackung
+        const section3Items = [];
+        if (fmt(data.lieferscheintasche)) section3Items.push({ description: 'Lieferscheintasche', value: fmt(data.lieferscheintasche, ' €') });
+        if (data.kartonage1_text && fmt(data.kartonage1_wert)) section3Items.push({ description: data.kartonage1_text, value: fmt(data.kartonage1_wert, ' €') });
+        if (data.kartonage2_text && fmt(data.kartonage2_wert)) section3Items.push({ description: data.kartonage2_text, value: fmt(data.kartonage2_wert, ' €') });
+        if (data.kartonage3_text && fmt(data.kartonage3_wert)) section3Items.push({ description: data.kartonage3_text, value: fmt(data.kartonage3_wert, ' €') });
+
+        // Add 3-column layout
+        const sections = [
+          { title: 'Warenein- & Ausgang', items: section1Items },
+          { title: 'Retouren & Lager', items: section2Items },
+          { title: 'Material & Verpackung', items: section3Items }
+        ];
+
+        pdf.addThreeColumnSections(sections);
+
+        // Add Bemerkungen if present
+        if (data.bemerkungen && data.bemerkungen.trim()) {
+          pdf.addRemarks('Bemerkungen', data.bemerkungen);
+        }
       }
 
       pdf.addLegalNotes([
-        'Alle Preise verstehen sich zuzüglich MwSt.',
+        'Alle Preise verstehen sich pro Stück und zuzüglich MwSt.',
         'Dieses Angebot ist 30 Tage ab Ausstellungsdatum gültig.'
       ]);
 
@@ -213,11 +231,12 @@ Fashion Holding Düsseldorf GmbH`;
         }
       );
 
-      pdf.addDocumentTitle('ANGEBOT');
+      const kundenName = offer.kunde || offer.customer_company || offer.customer_name || 'Angebot';
+      pdf.addDocumentTitle(`Angebot: ${kundenName}`);
 
       const defaultMessage = `Sehr geehrte Damen und Herren,
 
-vielen Dank für Ihr Interesse an unseren Produkten.
+vielen Dank für Ihr Interesse an unseren Dienstleistungen.
 Anbei übersenden wir Ihnen wie besprochen unser Angebot.
 
 Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen gerne zur Verfügung.
@@ -260,36 +279,53 @@ Fashion Holding Düsseldorf GmbH`;
         });
       } else if (offer.offer_type === 'warehousing' && offer.warehousing) {
         const data = offer.warehousing;
-        const sectionItems = [];
 
-        if (fmt(data.handling_in_entladung)) sectionItems.push({ description: 'Handling IN - Entladung (pro Stück)', value: fmt(data.handling_in_entladung) });
-        if (fmt(data.lagerplatz_verbringen)) sectionItems.push({ description: 'Lagerplatz verbringen (pro Stück)', value: fmt(data.lagerplatz_verbringen) });
-        if (fmt(data.kommissionierung_b2b)) sectionItems.push({ description: 'Kommissionierung B2B (pro Stück)', value: fmt(data.kommissionierung_b2b) });
-        if (fmt(data.kommissionierung_b2c)) sectionItems.push({ description: 'Kommissionierung B2C (pro Stück)', value: fmt(data.kommissionierung_b2c) });
-        if (fmt(data.zusatzarbeiten_stunden)) sectionItems.push({ description: 'Zusatzarbeiten (pro Stunde)', value: fmt(data.zusatzarbeiten_stunden) });
-        if (fmt(data.handling_out)) sectionItems.push({ description: 'Handling OUT (pro Stück)', value: fmt(data.handling_out) });
-        if (fmt(data.anmeldung_avisierung)) sectionItems.push({ description: 'Anmeldung/Avisierung', value: fmt(data.anmeldung_avisierung) });
-        if (fmt(data.lieferscheintasche)) sectionItems.push({ description: 'Lieferscheintasche', value: fmt(data.lieferscheintasche) });
-        if (data.kartonage1_text && fmt(data.kartonage1_wert)) sectionItems.push({ description: data.kartonage1_text, value: fmt(data.kartonage1_wert) });
-        if (data.kartonage2_text && fmt(data.kartonage2_wert)) sectionItems.push({ description: data.kartonage2_text, value: fmt(data.kartonage2_wert) });
-        if (data.kartonage3_text && fmt(data.kartonage3_wert)) sectionItems.push({ description: data.kartonage3_text, value: fmt(data.kartonage3_wert) });
-        if (fmt(data.annahme_entsorgung)) sectionItems.push({ description: 'Annahme/Entsorgung', value: fmt(data.annahme_entsorgung) });
-        if (fmt(data.grobsichtung)) sectionItems.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung) });
-        if (fmt(data.einhuellen_polybag)) sectionItems.push({ description: 'Einhüllen Polybag', value: fmt(data.einhuellen_polybag) });
-        if (fmt(data.rueckfuehrung_bestand)) sectionItems.push({ description: 'Rückführung Bestand', value: fmt(data.rueckfuehrung_bestand) });
-        if (fmt(data.flaeche_m2) && fmt(data.preis_m2)) sectionItems.push({ description: `Lagerfläche (${data.flaeche_m2} m²)`, value: fmt(data.preis_m2, ' EUR/m²') });
-        if (fmt(data.inventur_stunden)) sectionItems.push({ description: 'Inventur (pro Stunde)', value: fmt(data.inventur_stunden) });
-        if (fmt(data.etiketten_drucken_stunden)) sectionItems.push({ description: 'Etiketten drucken (pro Stunde)', value: fmt(data.etiketten_drucken_stunden) });
-        if (fmt(data.etikettierung_stunden)) sectionItems.push({ description: 'Etikettierung (pro Stunde)', value: fmt(data.etikettierung_stunden) });
+        // Bereich 1: Wareneingang & Warenausgang
+        const section1Items = [];
+        if (fmt(data.handling_in_entladung)) section1Items.push({ description: 'Handling in / Entladung', value: fmt(data.handling_in_entladung, ' €') });
+        if (fmt(data.lagerplatz_verbringen)) section1Items.push({ description: 'Lagerplatz verbringen', value: fmt(data.lagerplatz_verbringen, ' €') });
+        if (fmt(data.kommissionierung_b2b)) section1Items.push({ description: 'Kommissionierung B2B', value: fmt(data.kommissionierung_b2b, ' €') });
+        if (fmt(data.kommissionierung_b2c)) section1Items.push({ description: 'Kommissionierung B2C', value: fmt(data.kommissionierung_b2c, ' €') });
+        if (fmt(data.zusatzarbeiten_stunden)) section1Items.push({ description: 'Zusatzarbeiten (Std.)', value: fmt(data.zusatzarbeiten_stunden, ' €') });
+        if (fmt(data.handling_out)) section1Items.push({ description: 'Handling out', value: fmt(data.handling_out, ' €') });
+        if (fmt(data.anmeldung_avisierung)) section1Items.push({ description: 'Anmeldung / Avisierung', value: fmt(data.anmeldung_avisierung, ' €') });
 
-        pdf.addSection({
-          title: 'Warehousing-Leistungen',
-          items: sectionItems
-        });
+        // Bereich 2: Retouren & Lager & Sonderarbeiten
+        const section2Items = [];
+        if (fmt(data.annahme_entsorgung)) section2Items.push({ description: 'Annahme / Entsorgung', value: fmt(data.annahme_entsorgung, ' €') });
+        if (fmt(data.grobsichtung)) section2Items.push({ description: 'Grobsichtung', value: fmt(data.grobsichtung, ' €') });
+        if (fmt(data.einhuellen_polybag)) section2Items.push({ description: 'Einhüllen Polybag', value: fmt(data.einhuellen_polybag, ' €') });
+        if (fmt(data.rueckfuehrung_bestand)) section2Items.push({ description: 'Rückführung Bestand', value: fmt(data.rueckfuehrung_bestand, ' €') });
+        if (data.flaeche_m2) section2Items.push({ description: 'Fläche', value: data.flaeche_m2 + ' m²' });
+        if (fmt(data.preis_m2)) section2Items.push({ description: 'Preis pro m²', value: fmt(data.preis_m2, ' €') });
+        if (fmt(data.inventur_stunden)) section2Items.push({ description: 'Inventur (Std.)', value: fmt(data.inventur_stunden, ' €') });
+        if (fmt(data.etiketten_drucken_stunden)) section2Items.push({ description: 'Etiketten drucken (Std.)', value: fmt(data.etiketten_drucken_stunden, ' €') });
+        if (fmt(data.etikettierung_stunden)) section2Items.push({ description: 'Etikettierung (Std.)', value: fmt(data.etikettierung_stunden, ' €') });
+
+        // Bereich 3: Material & Verpackung
+        const section3Items = [];
+        if (fmt(data.lieferscheintasche)) section3Items.push({ description: 'Lieferscheintasche', value: fmt(data.lieferscheintasche, ' €') });
+        if (data.kartonage1_text && fmt(data.kartonage1_wert)) section3Items.push({ description: data.kartonage1_text, value: fmt(data.kartonage1_wert, ' €') });
+        if (data.kartonage2_text && fmt(data.kartonage2_wert)) section3Items.push({ description: data.kartonage2_text, value: fmt(data.kartonage2_wert, ' €') });
+        if (data.kartonage3_text && fmt(data.kartonage3_wert)) section3Items.push({ description: data.kartonage3_text, value: fmt(data.kartonage3_wert, ' €') });
+
+        // Add 3-column layout
+        const sections = [
+          { title: 'Warenein- & Ausgang', items: section1Items },
+          { title: 'Retouren & Lager', items: section2Items },
+          { title: 'Material & Verpackung', items: section3Items }
+        ];
+
+        pdf.addThreeColumnSections(sections);
+
+        // Add Bemerkungen if present
+        if (data.bemerkungen && data.bemerkungen.trim()) {
+          pdf.addRemarks('Bemerkungen', data.bemerkungen);
+        }
       }
 
       pdf.addLegalNotes([
-        'Alle Preise verstehen sich zuzüglich MwSt.',
+        'Alle Preise verstehen sich pro Stück und zuzüglich MwSt.',
         'Dieses Angebot ist 30 Tage ab Ausstellungsdatum gültig.'
       ]);
 
