@@ -305,7 +305,7 @@ const WarehousingCalculation = () => {
         <p className="text-gray-600 mb-8">Erstellen Sie eine Kalkulation für Warehousing-Dienstleistungen.</p>
 
         <div className="bg-white rounded-xl p-6 mb-6 shadow-md border border-gray-200">
-          <label className="block mb-2 text-gray-700 font-semibold">Kundenname / Bezeichnung</label>
+          <label className="block mb-2 text-gray-700 font-semibold">Kunde</label>
           <input
             type="text"
             value={kunde}
