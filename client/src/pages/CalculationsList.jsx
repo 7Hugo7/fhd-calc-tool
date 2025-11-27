@@ -159,7 +159,7 @@ const CalculationsList = () => {
               <thead>
                 <tr className="bg-gray-50 border-b-2 border-gray-200">
                   <th className="text-left p-4 font-semibold w-12"></th>
-                  <th className="text-left p-4 font-semibold">Titel</th>
+                  <th className="text-left p-4 font-semibold">Kundenname / Bezeichnung</th>
                   <th className="text-left p-4 font-semibold">Typ</th>
                   <th className="text-left p-4 font-semibold">Erstellt am</th>
                   <th className="text-left p-4 font-semibold">Versionen</th>
