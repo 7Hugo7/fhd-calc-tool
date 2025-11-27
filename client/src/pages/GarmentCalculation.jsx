@@ -85,7 +85,7 @@ const GarmentCalculation = () => {
           fhd_aufschlag_prozent: item.fhd_aufschlag_prozent?.toString() || '',
           fhd_aufschlag_wert: item.fhd_aufschlag_wert?.toString() || '',
           vk_roh: item.vk_roh?.toString() || '',
-          vk_gesetzt: item.vk_gesetzt?.toString() || '',
+          vk_gesetzt: item.vk_gesetzt != null ? parseFloat(item.vk_gesetzt).toFixed(2).replace('.', ',') : '',
           provision_agent_prozent: item.provision_agent_prozent?.toString() || '',
           provision_agent_wert: item.provision_agent_wert?.toString() || '',
           marge_real: item.marge_real?.toString() || '',

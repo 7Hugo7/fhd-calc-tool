@@ -401,12 +401,12 @@ function insertGarmentItems(calcId, items) {
       item.composition || null,
       item.gg || null,
       item.material || null,
-      item.lieferart || null,
+      item.lieferung || null,
       item.lieferant || null,
-      item.lieferzeiten || null,
+      item.lieferzeit || null,
       item.produktionszeitraum || null,
       item.frachtzeitraum || null,
-      parseGermanFloat(item.luftfracht_zuschlag),
+      parseGermanFloat(item.luftfrachtzuschlag),
       item.bemerkungen || null
     );
   }
